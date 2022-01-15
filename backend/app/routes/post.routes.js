@@ -1,27 +1,29 @@
-
+    const express = require('express')
     const posts = require("../controllers/post.controller.js");
-  
+    const auth = require('../middleware/auth')
     var router = require("express").Router();
-  
+    const multer = require('../middleware/multer-config')
+
     // Creation d'un nouveau post
-    router.post("/", posts.create);
+    router.post("/", auth, multer, posts.create);
+   
   
     // trouver tous les posts
-    router.get("/", posts.findAll);
+    router.get("/", auth,  posts.findAll);
   
     // Trouver tous les posts publiés
-    router.get("/published", posts.findAllPublished);
+    router.get("/published", auth, posts.findAllPublished);
   
     // trouver un post avec un id
-    router.get("/:id", posts.findOne);
+    router.get("/:id", auth, posts.findOne);
   
     // Modifier un post avec un id
-    router.put("/:id", posts.update);
+    router.put("/:id", auth, multer, posts.update);
   
     // supprimer un post avec un id
-    router.delete("/:id", posts.delete);
+    router.delete("/:id", auth, posts.delete);
   
     // Supprimer tous les posts
-    router.delete("/", posts.deleteAll);
+    router.delete("/", auth, posts.deleteAll);
   
 module.exports = router

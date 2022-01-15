@@ -1,10 +1,8 @@
 const express = require('express')
-const router = express.Router()
+var router = require("express").Router();
 const auth = require('../middleware/auth')
 const comments = require("../controllers/comment.controller.js");
-  
- 
-  
+
     // Creation d'un nouveau comment
     router.post("/", auth, comments.create);
   

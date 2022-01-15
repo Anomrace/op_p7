@@ -1,6 +1,10 @@
 const db = require("../models");
+const Post = db.posts;
+const User = db.users;
 const Comment = db.comments;
-const Op = db.Sequelize.Op;
+const post = require("../models/post");
+const user = require("../models/user");
+const jwt = require('jsonwebtoken')
 
 exports.create = (req, res) => {
     // Valider la requête
@@ -10,23 +14,28 @@ exports.create = (req, res) => {
       });
       return;
     }
-  
-    // Creer un post
-    const comment = {
-      title: req.body.title,
-      description: req.body.description,
-      published: req.body.published ? req.body.published : false
-    };
+    const token = req.headers.authorization.split(' ')[1]
+        // console.log(token);
+        const decodedToken = jwt.verify(token, 'TOKEN_TEST')
+        const userId = decodedToken.userId
+    console.log(req.body)
+        // const postId = 
   
     // Sauver un post dans la DB
-    Comment.create(comment)
+    Comment.create({
+      title: req.body.title,
+      content: req.body.content,
+      UserId: userId,
+      PostId : req.body.postID
+
+    })
       .then(data => {
         res.send(data);
       })
       .catch(err => {
         res.status(500).send({
           message:
-            err.message || "Une erreur est survenue dans la création du commentaire"
+            err.message || "Une erreur est survenue dans la création du post:"
         });
       });
   };
@@ -37,12 +46,13 @@ exports.create = (req, res) => {
   
     Comment.findAll({ where: condition })
       .then(data => {
+        console.log(data)
         res.send(data);
       })
       .catch(err => {
         res.status(500).send({
           message:
-            err.message || "Un erreur est survenu lors de la recherche de tous les commentaires."
+            err.message || "Un erreur est survenu lors de la recherche de tous les posts."
         });
       });
   };
@@ -56,7 +66,7 @@ exports.create = (req, res) => {
       })
       .catch(err => {
         res.status(500).send({
-          message: "Erreur pour le commentaire id=" + id
+          message: "Erreur pour le post id=" + id
         });
       });
   };
@@ -70,17 +80,17 @@ exports.create = (req, res) => {
       .then(num => {
         if (num == 1) {
           res.send({
-            message: "Le commentaire a été modifié avec succès"
+            message: "Le post a été modifié avec succès"
           });
         } else {
           res.send({
-            message: `Impossible de modifier le commentaire id=${id}. Le commentaire est peut etre introuvable ou le body est vide`
+            message: `Impossible de modifier le post id=${id}. Le post est peut etre introuvable ou le body est vide`
           });
         }
       })
       .catch(err => {
         res.status(500).send({
-          message: "Erreur dans la mise à jour du commentaire id=" + id
+          message: "Erreur dans la mise à jour du comment id=" + id
         });
       });
   };
@@ -95,19 +105,20 @@ exports.create = (req, res) => {
       .then(num => {
         if (num == 1) {
           res.send({
-            message: "Le commentaire a été effacé avec succès"
+            message: "Le comment a été effacé avec succès"
           });
         } else {
           res.send({
-            message: `Impossible de supprimer le commentaire id=${id}. Peut être que le post n'a pas été trouvé!`
+            message: `Impossible de supprimer le comment id=${id}. Peut être que le comment n'a pas été trouvé!`
           });
         }
       })
       .catch(err => {
         res.status(500).send({
-          message: "Erreur dans la suppression du commentaire id=" + id
+          message: "Erreur dans la suppression du comment id=" + id
         });
       });
+      
   };
 
 
@@ -117,12 +128,12 @@ exports.create = (req, res) => {
       truncate: false
     })
       .then(nums => {
-        res.send({ message: `${nums} Tous les commentaires ont été supprimé avec succès` });
+        res.send({ message: `${nums} Tous les comments ont été supprimé avec succès` });
       })
       .catch(err => {
         res.status(500).send({
           message:
-            err.message || "Une erreur est survenu lors de la suppression des commentaires."
+            err.message || "Une erreur est survenu lors de la suppression des comments."
         });
       });
   };
@@ -140,6 +151,8 @@ exports.create = (req, res) => {
         });
       });
   };
+
+
 
 
 

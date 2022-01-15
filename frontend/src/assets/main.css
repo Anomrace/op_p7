@@ -1,25 +1,55 @@
 body {
-    background: #5890e4bd;
-    color: #444;
-  }
-  .container {
-    width: 90%;
-    max-width: 960px;
-    margin: 80px auto;
-    border-radius: 20px;
-    box-shadow: 2px 4px 6px rgba(28, 6, 49, 0.1);
-    background: white;
-  }
-  .error {
-    color: #ff3f80;
-    font-size: 14px;
-  }
-  button {
-    text-decoration: none;
-    background: #5890e4bd;
-    color: white;
-    font-weight: bold;
-    border: 0;
-    border-radius: 20px;
-    padding: 10px 20px;
-  }
+  background: #5890e4bd;
+  color: #444;
+}
+
+.navbar {
+  width: 90%;
+  max-width: 960px;
+  margin: 80px auto;
+  border-radius: 20px;
+  box-shadow: 2px 4px 6px rgba(28, 6, 49, 0.1);
+  background: white;
+}
+
+.navbar ul {
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: space-evenly;
+}
+
+.navbar li {
+  list-style: none;
+
+}
+
+.container {
+  width: 60%;
+  max-width: 960px;
+  margin: 80px auto;
+  border-radius: 20px;
+  box-shadow: 2px 4px 6px rgba(28, 6, 49, 0.1);
+  background: white;
+  padding: 1em;
+}
+
+
+button {
+  text-decoration: none;
+  background: #5890e4bd;
+  color: white;
+  font-weight: bold;
+  border: 0;
+  border-radius: 20px;
+  padding: 10px 20px;
+  transition: 0.3s;
+}
+
+button:hover {
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+}
+
+h2 {
+  text-align: center;
+}

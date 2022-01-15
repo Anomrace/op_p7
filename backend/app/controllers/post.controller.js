@@ -1,48 +1,60 @@
 const db = require("../models");
 const Post = db.posts;
-const Op = db.Sequelize.Op;
+const User = db.users;
+const Comment = db.comments;
+const jwt = require('jsonwebtoken');
+const post = require("../models/post");
+const user = require("../models/user");
+const fs = require('fs')
+
+
 
 exports.create = (req, res) => {
-    // Valider la requête
-    if (!req.body.title) {
-      res.status(400).send({
-        message: "Le contenu ne peut être vide"
-      });
-      return;
-    }
-  
-    // Creer un post
-    const post = {
-      title: req.body.title,
-      description: req.body.description,
-      published: req.body.published ? req.body.published : false
-    };
-  
+  const token = req.headers.authorization.split(' ')[1]
+        // console.log(token);
+        const decodedToken = jwt.verify(token, 'TOKEN_TEST')
+        const userId = decodedToken.userId
+    
     // Sauver un post dans la DB
-    Post.create(post)
+    // console.log(req.body, req.file)
+    Post.create({
+      title: req.body.title,
+      content: req.body.content,
+      image:  req.file ? `${req.protocol}://${req.get('host')}/images/${req.file.filename}` : null,
+      UserId: userId
+    })
+    
       .then(data => {
-        res.send(data);
+        res.status(201).send({message: "le post a bien été créé"});
       })
       .catch(err => {
         res.status(500).send({
-          message:
-            err.message || "Une erreur est survenue dans la création du post:"
+          message: "Une erreur est survenue dans la création du post:"
         });
       });
   };
 
   exports.findAll = (req, res) => {
-    const title = req.query.title;
-    var condition = title ? { title: { [Op.like]: `%${title}%` } } : null;
-  
-    Post.findAll({ where: condition })
+    // console.log(User)
+    Post.findAll({
+      include: [
+        {model : User}, 
+        {
+          model : Comment,
+          include: [
+            {model : User}
+          ]
+        }
+      ]
+    })
       .then(data => {
+        // console.log(data)
         res.send(data);
       })
       .catch(err => {
         res.status(500).send({
           message:
-            err.message || "Un erreur est survenu lors de la recherche de tous les posts."
+            "Un erreur est survenu lors de la recherche de tous les posts."
         });
       });
   };
@@ -63,51 +75,123 @@ exports.create = (req, res) => {
 
   exports.update = (req, res) => {
     const id = req.params.id;
-  
-    Post.update(req.body, {
-      where: { id: id }
-    })
-      .then(num => {
-        if (num == 1) {
-          res.send({
-            message: "Le post a été modifié avec succès"
-          });
-        } else {
-          res.send({
-            message: `Impossible de modifier le post id=${id}. Le post est peut etre introuvable ou le body est vide`
+    const token = req.headers.authorization.split(' ')[1]
+    // console.log(token);
+    const decodedToken = jwt.verify(token, 'TOKEN_TEST')
+    const userId = decodedToken.userId
+   
+// console.log(req.body)
+// Post.findByPk(id)
+// .then(data => {
+//   console.log(data.image)
+// })
+//       .catch(err => {
+//         res.status(500).send({
+//         message: "Erreur pour le post id=" + id
+//         });
+//       });
+    // on cherche le post en donnant l'id
+    Post.findByPk(id)
+      // si le poste existe 
+      .then(data => {
+        console.log(data.UserId)
+        // si l'id de l'utilisateur qui essaye de modifier le poste correspond à l'utilisateur qui l'a crée ou si le userID est celui de l'administrateur alors 
+        if(data.UserId === userId){
+          // création de MonImage qui correspond à l'image actuellement utilisée par le post
+          let MonImage = data.image
+
+          // Condition si un fichier est envoyé dans la requete alors il faut 
+          if (req.file){
+
+            fs.unlink(`${req.protocol}://${req.get('host')}/images/${req.file.filename}`, 
+              (err =>{
+              if(err) console.log(err);
+              else {
+                console.log("le fichier a bien été supprimé")
+              }
+              }),
+
+              MonImage = `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
+            )
+          }
+
+            Post.update(
+            {
+            title: req.body.title,
+            content: req.body.content,
+            image:  MonImage 
+            }, 
+            {
+            where: { id: id }
+            }
+            )
+            .then(body => {
+              res.status(201).send({
+              message: "Le post a été modifié avec succès"
+              });
+
+            })
+          .catch(err => {
+            res.status(500).send({message: "Erreur dans la mise à jour du post id=" + id});
+            
           });
         }
+
+        // si le userID ne correspond ni au premier cas ni au deuxième alors 
+        else{
+          res.status(400).send({
+          message: "il ne vous est pas permis de modifier ce poste" 
+          });
+        }
+      
       })
+    // si le poste n'existe pas
       .catch(err => {
         res.status(500).send({
-          message: "Erreur dans la mise à jour du post id=" + id
+        message: "Erreur pour le post id=" + id
         });
       });
   };
 
 
+
   exports.delete = (req, res) => {
+    
     const id = req.params.id;
-  
-    Post.destroy({
-      where: { id: id }
-    })
-      .then(num => {
-        if (num == 1) {
-          res.send({
-            message: "Le post a été effacé avec succès"
+    const token = req.headers.authorization.split(' ')[1]
+    // console.log(token);
+    const decodedToken = jwt.verify(token, 'TOKEN_TEST')
+    const userId = decodedToken.userId
+    // console.log(req.userId)
+    Post.findByPk(id)
+    .then(data =>{
+      if(data.UserId === userId){
+        Post.destroy({
+          where: { id: id}
+        })
+          .then(data => {
+            return res.status(200).json({ message :"post supprimé avec succès "});
+          })
+          .catch(err =>{
+            return res.status(401).json({message: "un problème est survenu dans la suppresion du post"})
+          })
+      }
+      else{
+        res.status(400).send({
+          message: "il ne vous est pas permis de supprimer ce poste" 
           });
-        } else {
-          res.send({
-            message: `Impossible de supprimer le post id=${id}. Peut être que le post n'a pas été trouvé!`
-          });
-        }
-      })
-      .catch(err => {
-        res.status(500).send({
-          message: "Erreur dans la suppression du post id=" + id
+      }
+    }
+    )
+    .catch(err =>{
+      res.status(500).send({
+        message: "Erreur pour le post id=" + id
         });
-      });
+    })
+
+    
+     
+      
   };
 
 
@@ -116,8 +200,8 @@ exports.create = (req, res) => {
       where: {},
       truncate: false
     })
-      .then(nums => {
-        res.send({ message: `${nums} Tous les posts ont été supprimé avec succès` });
+      .then(data => {
+        res.status(201).send({ message: ` Tous les posts ont été supprimé avec succès` });
       })
       .catch(err => {
         res.status(500).send({
