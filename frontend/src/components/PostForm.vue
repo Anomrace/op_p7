@@ -1,19 +1,40 @@
 <template>
-  <section class="content">
+  <section class="postform">
+    <div class="postform-header">
+      <img :src="userImage" alt="" />
+      <h2>Quoi de neuf, {{ userName }} ?</h2>
+    </div>
+    <br />
     <form
       @submit.prevent="handleSubmit"
       method="post"
       enctype="multipart/form-data"
     >
       <input type="text" required placeholder="Titre" v-model="title" />
-      <input type="text" required placeholder="Contenu" v-model="content" />
       <input
+        class="input-contenu"
+        type="text"
+        required
+        placeholder="Contenu"
+        v-model="content"
+      />
+
+      <input
+        id="vraiBouton"
         type="file"
         placeholder="ta photo de profil"
         ref="file"
         @change="handleChange"
+        hidden
       />
-      <button type="submit" @click="reloadPage">Publier</button>
+      <br /><br />
+      <label for="vraiBouton">Ajouter une image</label>
+      <br /><br />
+      <span>Aucun fichier choisi</span>
+      <br />
+      <br />
+
+      <button type="submit">Publier</button>
     </form>
   </section>
 </template>
@@ -27,12 +48,15 @@ export default {
     return {
       title: "",
       content: "",
+      userName: localStorage.getItem("username"),
+      userImage: localStorage.getItem("userImage"),
     };
   },
   methods: {
     handleChange() {
       const file = this.$refs.file.files[0];
       this.file = file;
+      // let fichierChoisi = this.file.name;
       console.log(this.file);
     },
 
@@ -46,9 +70,11 @@ export default {
       console.log(myformData.get("image"));
 
       const token = localStorage.getItem("token");
-
+      for (var pair of myformData.entries()) {
+        console.log(pair[0] + ", " + pair[1]);
+      }
       axios
-        .post("http://localhost:8082/api/posts", myformData, {
+        .post("http://localhost:3000/api/posts", myformData, {
           headers: {
             Authorization: `Bearer ${token}`,
             "Content-Type": "multipart/form-data",
@@ -56,6 +82,7 @@ export default {
         })
         .then(function (response) {
           console.log(response);
+          window.location.reload();
         })
         .catch((error) => console.error(error.response));
     },
@@ -67,9 +94,29 @@ export default {
 </script>
 
 <style scoped>
-.content form {
+.postform {
+  background: white;
+  padding: 1em;
+  border-radius: 8px;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.2);
+}
+
+.input-contenu {
+  padding-bottom: 4em;
+}
+
+img {
+  width: 2em;
+  height: 2em;
+  border-radius: 20px;
+}
+
+.postform-header {
   display: flex;
-  flex-direction: column;
-  align-items: center;
+  justify-content: space-around;
+}
+
+h2 {
+  font-size: 1.2em;
 }
 </style>

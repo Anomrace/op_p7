@@ -1,55 +1,105 @@
-body {
-  background: #5890e4bd;
-  color: #444;
+@import url("https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500;600;700&display=swap");
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Open Sans";
+}
+:root {
+  --grey: rgb(236, 238, 246);
+  --pink: rgb(247, 130, 134);
+  --blue: rgb(130, 132, 247);
 }
 
+.flex-column-center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+/* body {
+  background-color: var(--grey);
+} */
+
 .navbar {
-  width: 90%;
-  max-width: 960px;
-  margin: 80px auto;
-  border-radius: 20px;
-  box-shadow: 2px 4px 6px rgba(28, 6, 49, 0.1);
-  background: white;
+  position: sticky;
+  top: 0;
+  margin: 0;
+  padding: 1em;
+  /* border: 1px solid red; */
+  font-family: "Open Sans";
+  background-color: white;
+  display: flex;
+  justify-content: space-between;
 }
 
 .navbar ul {
-  margin: 0;
-  padding: 0;
-  display: flex;
-  justify-content: space-evenly;
-}
-
-.navbar li {
   list-style: none;
-
+  display: flex;
+  gap: 1em;
 }
 
-.container {
-  width: 60%;
-  max-width: 960px;
-  margin: 80px auto;
-  border-radius: 20px;
-  box-shadow: 2px 4px 6px rgba(28, 6, 49, 0.1);
-  background: white;
+.navbar ul li:first-child {
+  display: flex;
+  gap: 1em;
+}
+
+.navbar a {
+  text-decoration: none;
+  color: var(--pink);
+}
+
+.navbar a img {
+  color: var(--pink);
+}
+
+.navbar a::first-letter {
+  text-transform: capitalize;
+}
+
+.main-content {
   padding: 1em;
+  max-width: 40em;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
 }
 
+input {
+  width: 100%;
+  border: none;
+  border-radius: 3px;
+  padding: 0.5em;
+  /* margin: 1em; */
+  margin-bottom: 1em;
+  box-shadow: -0.2px 0.3px 1px 1px rgba(0, 0, 0, 0.1);
+}
 
 button {
-  text-decoration: none;
-  background: #5890e4bd;
+  cursor: pointer;
+  width: 100%;
+  padding: 0.5em;
+  border: none;
+  background-color: var(--pink);
   color: white;
-  font-weight: bold;
-  border: 0;
-  border-radius: 20px;
-  padding: 10px 20px;
-  transition: 0.3s;
+
+  border-radius: 3px;
+  box-shadow: -0.2px 0.3px 1px 1px rgba(0, 0, 0, 0.1);
 }
 
-button:hover {
-  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+label {
+  cursor: pointer;
+  min-width: 100%;
+  border: none;
+  border-radius: 3px;
+  padding: 0.5em;
+  margin-bottom: 1em;
+  box-shadow: -0.2px 0.3px 1px 1px rgba(0, 0, 0, 0.1);
 }
 
-h2 {
-  text-align: center;
+img {
+  width: 100%;
+}
+
+svg {
+  color: var(--pink);
 }

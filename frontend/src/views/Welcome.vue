@@ -1,19 +1,22 @@
 <template>
-  <div class="welcome container">
-    <div v-if="showLogin">
-      <h2>Se connecter</h2>
+  <main>
+    <img src="@/assets/images/icon-above-font.svg" alt="logo groupomania" />
+    <section v-if="showLogin">
       <LoginForm />
-      <p>
-        Pas encore de compte ?
-        <span @click="showLogin = false">S'inscrire</span>
-      </p>
-    </div>
-    <div v-else>
+      <br />
+      <p>Pas encore de compte ?</p>
+      <br />
+      <button @click="showLogin = false">S'inscrire</button>
+    </section>
+    <section v-else>
       <h2>S'inscrire</h2>
       <SignupForm />
-      <p>Déjà inscrit? <span @click="showLogin = true">Se connecter</span></p>
-    </div>
-  </div>
+      <br />
+      <p>Déjà inscrit?</p>
+      <br />
+      <button @click="showLogin = true">Se connecter</button>
+    </section>
+  </main>
 </template>
 
 <script>
@@ -29,34 +32,29 @@ export default {
 };
 </script>
 
-<style>
-.welcome {
-  text-align: center;
-  padding: 20px 0;
-}
-form {
-  width: 300px;
-  margin: 20px auto;
-}
-.welcome label {
+<style scoped>
+img {
+  width: 10em;
   display: block;
-  margin: 20px 0 10px;
+  margin-left: auto;
+  margin-right: auto;
 }
-input {
-  width: 100%;
-  padding: 10px;
-  border-radius: 20px;
-  border: 1px solid #eee;
-  outline: none;
-  color: #999;
-  margin: 10px auto;
+
+h2 {
+  text-align: center;
 }
-.welcome span {
-  font-weight: bold;
-  text-decoration: underline;
-  cursor: pointer;
+
+p {
+  text-align: center;
 }
 button {
-  margin: 20px auto;
+  cursor: pointer;
+  width: 100%;
+  border: none;
+  padding: 0.5em;
+  background-color: var(--blue);
+  color: white;
+  border-radius: 3px;
+  box-shadow: -0.2px 0.3px 1px 1px rgba(0, 0, 0, 0.1);
 }
 </style>

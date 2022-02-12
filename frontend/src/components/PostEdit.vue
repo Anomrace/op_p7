@@ -1,20 +1,20 @@
 <template>
-  <div class="modal-backdrop">
+  <div class="modal-background">
     <div class="modal">
-      <header class="modal-header">
+      <header>
         <slot name="header"> Editer votre post </slot>
         <button type="button" class="btn-close" @click="close">x</button>
       </header>
 
-      <section class="modal-body">
+      <section>
         <form
           @submit.prevent="handleSubmit(post.id, post.image)"
           method="post"
           enctype="multipart/form-data"
         >
-          <input ref="title" type="text" v-model="title" />
-          <input ref="content" type="text" v-model="content" />
-          <img :src="post.image" alt="img" />
+          <input type="text" v-model="title" />
+          <input type="text" v-model="content" />
+          <img v-if="post.image !== null" :src="post.image" alt="img" />
           <input
             type="file"
             placeholder="ta photo de profil"
@@ -25,9 +25,7 @@
         </form>
       </section>
 
-      <button type="button" class="btn-green" @click="close">
-        Close Modal
-      </button>
+      <!-- <button type="button" @click="close">Close Modal</button> -->
     </div>
   </div>
 </template>
@@ -45,13 +43,6 @@ export default {
       image: props.post.image,
     };
   },
-
-  // const handleChange = () => {
-  //   console.log(this.$refs);
-  //   const file = this.$refs.file.files[0];
-  //   this.file = file;
-  //   console.log(this.file);
-  // };
 
   methods: {
     handleChange() {
@@ -72,7 +63,7 @@ export default {
 
       axios
 
-        .put("http://localhost:8082/api/posts/" + id, myformData, {
+        .put("http://localhost:3000/api/posts/" + id, myformData, {
           headers: {
             Authorization: `Bearer ${token}`,
             "Content-Type": "multipart/form-data",
@@ -80,8 +71,8 @@ export default {
         })
         .then(function (response) {
           console.log(response);
-          // this.close();
-          // this.reloadPage();
+          this.close();
+          this.reloadPage();
         })
         .catch((error) => console.error(error.response));
     },
@@ -96,70 +87,32 @@ export default {
 </script>
 
 <style>
-.modal-backdrop {
+.modal-background {
   position: fixed;
+  z-index: 999;
   top: 0;
-  bottom: 0;
   left: 0;
   right: 0;
-  background-color: rgba(0, 0, 0, 0.3);
+  bottom: 0;
+  /* width: 100%; */
+  background: rgba(255, 255, 255, 0.5);
   display: flex;
   justify-content: center;
   align-items: center;
 }
-
 .modal {
-  background: #ffffff;
-  box-shadow: 2px 2px 20px 1px;
-  overflow-x: auto;
-  display: flex;
-  flex-direction: column;
-}
-
-.modal-header,
-.modal-footer {
-  padding: 15px;
-  display: flex;
-}
-
-.modal-header {
-  position: relative;
-  border-bottom: 1px solid #eeeeee;
-  color: #4aae9b;
-  justify-content: space-between;
-}
-
-.modal-footer {
-  border-top: 1px solid #eeeeee;
-  flex-direction: column;
-  justify-content: flex-end;
-}
-
-.modal-body {
-  position: relative;
-  padding: 20px 10px;
+  position: fixed;
+  margin-left: auto;
+  margin-right: auto;
+  width: 300px;
+  padding: 1em;
+  background: white;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.2);
 }
 
 .btn-close {
-  position: absolute;
-  top: 0;
-  right: 0;
-  border: none;
-  font-size: 20px;
-  padding: 10px;
-  cursor: pointer;
-  font-weight: bold;
-  color: #4aae9b;
-  background: transparent;
-}
-
-.btn-green {
-  color: white;
-  background: #4aae9b;
-  border: 1px solid #4aae9b;
-  border-radius: 2px;
-}
-img {
-  width: 7em;
+  width: 2em;
+  height: 2em;
+  border-radius: 30px;
 }
 </style>

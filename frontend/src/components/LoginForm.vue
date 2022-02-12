@@ -26,7 +26,6 @@ export default {
   setup() {
     const form = reactive({
       username: "",
-      // email: "",
       password: "",
     });
 
@@ -34,11 +33,16 @@ export default {
 
     const handleSubmit = async () => {
       await axios
-        .post("http://localhost:8082/api/auth/signin", form, {
+        .post("http://localhost:3000/api/auth/signin", form, {
           headers: { "Content-Type": "application/json" },
         })
         .then(function (response) {
           localStorage.setItem("token", response.data.token);
+          localStorage.setItem("username", response.data.userName);
+          localStorage.setItem("userStatus", response.data.userStatus);
+          localStorage.setItem("userImage", response.data.userImage);
+          console.log(response.data);
+
           router.push("/home");
         })
         .catch(function (error) {
@@ -53,3 +57,9 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+/* form {
+  padding: 1em;
+} */
+</style>

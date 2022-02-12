@@ -1,14 +1,15 @@
 <template>
   <Nav />
-  <div class="container">
-    <h2>Exprimer-vous!</h2>
-    <PostForm />
-  </div>
-  <br />
-  <div class="container">
-    <h2>Tous les posts</h2>
-    <Posts />
-  </div>
+  <main>
+    <article class="main-content">
+      <section class="neuf">
+        <PostForm />
+      </section>
+      <section>
+        <Posts />
+      </section>
+    </article>
+  </main>
 </template>
 
 <script>
@@ -22,11 +23,31 @@ export default {
     Posts,
     PostForm,
   },
+  data() {
+    return {
+      userName: localStorage.getItem("username"),
+    };
+  },
 };
 </script>
 
 <style scoped>
-h1 {
+main {
+  background-color: var(--grey);
+}
+/* section {
+  border: 1px solid red;
+} */
+
+.section-header {
+  background: white;
+}
+
+h2 {
   text-align: center;
+}
+
+.neuf {
+  margin-bottom: 2em;
 }
 </style>

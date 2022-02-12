@@ -26,7 +26,7 @@
       placeholder="Mot de passe"
       v-model="password"
     />
-    <button type="submit">Sign up</button>
+    <button type="submit">Inscription</button>
   </form>
 </template>
 
@@ -37,15 +37,15 @@ import { useRouter } from "vue-router";
 
 export default {
   name: "Signup",
-  // data() {
-  //   return {
-  //     file: "",
-  //     email: "",
-  //     username: "",
-  //     biography: "",
-  //     password: "",
-  //   };
-  // },
+  data() {
+    return {
+      file: "",
+      email: "",
+      username: "",
+      biography: "",
+      password: "",
+    };
+  },
   methods: {
     handleChange() {
       const file = this.$refs.file.files[0];
@@ -70,9 +70,13 @@ export default {
 
       console.log(myformData.get("image"));
 
+      for (var pair of myformData.entries()) {
+        console.log(pair[0] + ", " + pair[1]);
+      }
+
       const router = useRouter();
       axios
-        .post("http://localhost:8082/api/auth/signup", myformData, {
+        .post("http://localhost:3000/api/auth/signup", myformData, {
           headers: { "Content-Type": "multipart/form-data" },
         })
         .then(function (response) {
