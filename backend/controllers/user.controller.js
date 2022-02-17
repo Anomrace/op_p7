@@ -1,11 +1,12 @@
 const db = require("../models");
 const fs = require("fs");
-
+const post = require("../models/post");
 const User = db.users;
-
+const Post = db.posts;
 var jwt = require("jsonwebtoken");
 var bcrypt = require("bcrypt");
 const user = require("../models/user");
+const { Op } = require("sequelize");
 
 exports.signup = (req, res, next) => {
   console.log(req.body, req.file);
@@ -133,6 +134,7 @@ exports.updateUser = (req, res, next) => {
   const userStatus = decodedToken.userStatus;
 
   User.findByPk(id).then((data) => {
+    console.log(data);
     if (data.id === userId || userStatus === 1) {
       let newUsername = data.username;
       let newEmail = data.email;
@@ -184,7 +186,7 @@ exports.updateUser = (req, res, next) => {
           where: { id: id },
         }
       )
-        .then((body) => {
+        .then((data) => {
           res.status(201).send({
             message: "Le profil a été modifié avec succès",
           });
@@ -202,10 +204,59 @@ exports.updateUser = (req, res, next) => {
   });
 };
 
-exports.deleteUser = (req, res, next) => {
-  //supprimer un utilisateur par lui même ou par l'administrateur
-};
+exports.deleteOneUser = (req, res, next) => {
+  const id = req.params.id;
+  const token = req.headers.authorization.split(" ")[1];
+  // console.log(token);
+  const decodedToken = jwt.verify(token, "TOKEN_TEST");
+  Post.findAll({
+    where: { userId: id },
+  }).then((data) => {
+    console.log(data.length);
 
-exports.deleteAllUser = (req, res, next) => {
-  //supprimer tous les utilisateurs sauf l'administrateur
+    data.forEach((Post) => {
+      let filename = Post.image.split("/images/")[1];
+
+      fs.unlink(`images/${filename}`, (err) => {
+        if (err) {
+          console.log(err);
+        } else {
+          console.log("le fichier a bien été supprimé");
+        }
+      });
+    });
+  });
+  User.findByPk(id)
+    .then((data) => {
+      // suppression de l'image de profil
+      let filename = data.image.split("/images/")[1];
+      console.log(filename);
+      fs.unlink(`images/${filename}`, (err) => {
+        if (err) {
+          console.log(err);
+        } else {
+          console.log("le fichier a bien été supprimé");
+        }
+      });
+      // suppression des images de tous ses posts
+      User.destroy({
+        where: { id: id },
+      })
+        .then((data) => {
+          res
+            .status(200)
+            .json({ message: "utilisateur supprimé avec succès " });
+        })
+        .catch((err) => {
+          res.status(401).json({
+            message:
+              "un problème est survenu dans la suppresion de l'utilisateur",
+          });
+        });
+    })
+    .catch((err) => {
+      res.status(500).send({
+        message: "Erreur pour le post id=" + id,
+      });
+    });
 };

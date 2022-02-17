@@ -62,7 +62,6 @@ export default {
       const token = localStorage.getItem("token");
 
       axios
-
         .put("http://localhost:3000/api/posts/" + id, myformData, {
           headers: {
             Authorization: `Bearer ${token}`,

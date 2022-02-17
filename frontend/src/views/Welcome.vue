@@ -1,14 +1,15 @@
 <template>
   <main>
-    <img src="@/assets/images/icon-above-font.svg" alt="logo groupomania" />
-    <section v-if="showLogin">
+    <section class="content" v-if="showLogin">
+      <img src="@/assets/images/icon-above-font.svg" alt="logo groupomania" />
       <LoginForm />
       <br />
       <p>Pas encore de compte ?</p>
       <br />
       <button @click="showLogin = false">S'inscrire</button>
     </section>
-    <section v-else>
+    <section class="content" v-else>
+      <img src="@/assets/images/icon-above-font.svg" alt="logo groupomania" />
       <h2>S'inscrire</h2>
       <SignupForm />
       <br />
@@ -33,6 +34,22 @@ export default {
 </script>
 
 <style scoped>
+main {
+  padding: 1em;
+  background: var(--grey);
+  min-height: 100vh;
+}
+.content {
+  margin-bottom: 1em;
+  padding: 1em;
+  max-width: 40em;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  border-radius: 8px;
+  background: white;
+  box-shadow: 0 1px 2px 0 rgb(0 0 0 / 20%);
+}
 img {
   width: 10em;
   display: block;

@@ -33,11 +33,8 @@ export default {
 
 <style scoped>
 main {
-  background-color: var(--grey);
+  background: var(--grey);
 }
-/* section {
-  border: 1px solid red;
-} */
 
 .section-header {
   background: white;
@@ -48,6 +45,14 @@ h2 {
 }
 
 .neuf {
-  margin-bottom: 2em;
+  margin-bottom: 1em;
+  padding: 1em;
+  max-width: 40em;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  border-radius: 8px;
+  background: white;
+  box-shadow: 0 1px 2px 0 rgb(0 0 0 / 20%);
 }
 </style>

@@ -30,7 +30,7 @@ const auth = (to, from, next) => {
     })
     .catch((err) => {
       console.log(err);
-      router.push("/");
+      // router.push("/");
     });
 };
 

@@ -1,15 +1,13 @@
 <template>
   <section class="comments-form">
-    <h1>Form Comments</h1>
     <form @submit.prevent="handleSubmit(postID)" method="post">
-      <input type="text" required placeholder="Titre" v-model="form.title" />
       <input
         type="text"
         required
-        placeholder="Contenu"
+        placeholder="votre commentaire"
         v-model="form.content"
       />
-      <button type="submit" @click="reloadPage">Publier</button>
+      <!-- <button type="submit" @click="reloadPage">Publier</button> -->
     </form>
   </section>
 </template>
@@ -22,7 +20,6 @@ export default {
   props: ["postID"],
   setup() {
     let form = reactive({
-      title: "",
       content: "",
     });
 
@@ -35,6 +32,7 @@ export default {
         })
         .then(function (response) {
           console.log(response);
+          window.location.reload();
         })
         .catch((error) => console.error(error.response.data));
     };
@@ -55,6 +53,7 @@ export default {
 <style scoped>
 .comments-form {
   border-radius: 20px;
+  padding: 1em;
   /* box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.2); */
 }
 </style>

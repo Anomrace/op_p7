@@ -11,7 +11,8 @@ router.post("/signin", userCtrl.signin);
 router.post("/user", auth, userCtrl.checkUser);
 router.get("/findAllUsers", auth, userCtrl.findAllUsers);
 router.get("/findUser", auth, userCtrl.findUser);
-
 router.put("/updateUser/:id", auth, multer, userCtrl.updateUser);
+// supprimer un utilisateur avec un id
+router.delete("/deleteOneUser/:id", auth, userCtrl.deleteOneUser);
 
 module.exports = router;

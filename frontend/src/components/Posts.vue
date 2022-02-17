@@ -56,6 +56,7 @@ export default {
         })
         .then((res) => {
           console.log(res);
+
           window.location.reload();
         })
         .catch((error) => console.log(error));
@@ -72,6 +73,7 @@ export default {
       posts: [],
       isModalVisible: false,
       postId: 0,
+      commentID: 0,
       userStatus: localStorage.getItem("userStatus"),
       localUsername: localStorage.getItem("username"),
     };
@@ -83,7 +85,6 @@ export default {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then((response) => {
-        console.log(response.data);
         // console.log(response.data[0].id);
         this.posts = response.data;
 
@@ -111,11 +112,13 @@ export default {
 .post-edit-delete {
   display: flex;
   gap: 0.5em;
+  padding: 1em;
 }
 
 article {
   background: white;
   margin-bottom: 1em;
+  padding-bottom: 0.1em;
 }
 .post {
   border-radius: 10px;
@@ -124,6 +127,11 @@ article {
 
 .post-header {
   display: flex;
+  align-items: center;
+  gap: 1em;
+}
+.post-header h1 {
+  font-size: 1.1em;
 }
 .post-header img {
   width: 2em;

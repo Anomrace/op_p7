@@ -19,9 +19,7 @@ exports.create = (req, res) => {
   const decodedToken = jwt.verify(token, "TOKEN_TEST");
   const userId = decodedToken.userId;
   console.log(req.body);
-  // const postId =
 
-  // Sauver un post dans la DB
   Comment.create({
     content: req.body.content,
     UserId: userId,
@@ -33,33 +31,84 @@ exports.create = (req, res) => {
     .catch((err) => {
       res.status(500).send({
         message:
-          err.message || "Une erreur est survenue dans la création du post:",
+          err.message ||
+          "Une erreur est survenue dans la création du commentaire:",
       });
     });
 };
 
 exports.update = (req, res) => {
   const id = req.params.id;
+  const token = req.headers.authorization.split(" ")[1];
+  // console.log(token);
+  const decodedToken = jwt.verify(token, "TOKEN_TEST");
+  const userId = decodedToken.userId;
+  const userStatus = decodedToken.userStatus;
 
-  Comment.update(req.body, {
-    where: { id: id },
-  })
-    .then((num) => {
-      if (num == 1) {
-        res.send({
-          message: "Le post a été modifié avec succès",
-        });
+  console.log(req.body, id);
+
+  Comment.findByPk(id)
+    .then((data) => {
+      if (data.UserId === userId || data.UserStatus === userStatus) {
+        Comment.update(
+          {
+            content: req.body.content,
+          },
+          {
+            where: { id: id },
+          }
+        )
+          .then((num) => {
+            if (num == 1) {
+              res.send({
+                message: "Le commentaire a été modifié avec succès",
+              });
+            } else {
+              res.send({
+                message: `Impossible de modifier le commentaire id=${id}. Le post est peut etre introuvable ou le body est vide`,
+              });
+            }
+          })
+          .catch((err) => {
+            res.status(500).send({
+              message: "Erreur dans la mise à jour du commentaire id=" + id,
+            });
+          });
       } else {
-        res.send({
-          message: `Impossible de modifier le post id=${id}. Le post est peut etre introuvable ou le body est vide`,
+        res.status(400).send({
+          message: "il ne vous est pas permis de modifier ce commentaire",
         });
       }
     })
     .catch((err) => {
       res.status(500).send({
-        message: "Erreur dans la mise à jour du comment id=" + id,
+        message: "Erreur pour le post id=" + id,
       });
     });
+  // Comment.update(
+  //   {
+  //     content: req.body.content,
+  //   },
+  //   {
+  //     where: { id: id },
+  //   }
+  // )
+  //   .then((num) => {
+  //     if (num == 1) {
+  //       res.send({
+  //         message: "Le commentaire a été modifié avec succès",
+  //       });
+  //     } else {
+  //       res.send({
+  //         message: `Impossible de modifier le commentaire id=${id}. Le post est peut etre introuvable ou le body est vide`,
+  //       });
+  //     }
+  //   })
+  //   .catch((err) => {
+  //     res.status(500).send({
+  //       message: "Erreur dans la mise à jour du commentaire id=" + id,
+  //     });
+  //   });
 };
 
 exports.delete = (req, res) => {
@@ -71,17 +120,17 @@ exports.delete = (req, res) => {
     .then((num) => {
       if (num == 1) {
         res.send({
-          message: "Le comment a été effacé avec succès",
+          message: "Le commentaire a été effacé avec succès",
         });
       } else {
         res.send({
-          message: `Impossible de supprimer le comment id=${id}. Peut être que le comment n'a pas été trouvé!`,
+          message: `Impossible de supprimer le commentaire id=${id}. Peut être que le commentaire n'a pas été trouvé!`,
         });
       }
     })
     .catch((err) => {
       res.status(500).send({
-        message: "Erreur dans la suppression du comment id=" + id,
+        message: "Erreur dans la suppression du commentaire id=" + id,
       });
     });
 };
@@ -93,14 +142,14 @@ exports.deleteAll = (req, res) => {
   })
     .then((nums) => {
       res.send({
-        message: `${nums} Tous les comments ont été supprimé avec succès`,
+        message: `${nums} Tous les commentaires ont été supprimé avec succès`,
       });
     })
     .catch((err) => {
       res.status(500).send({
         message:
           err.message ||
-          "Une erreur est survenu lors de la suppression des comments.",
+          "Une erreur est survenu lors de la suppression des commentaires.",
       });
     });
 };

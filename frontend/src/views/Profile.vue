@@ -1,42 +1,44 @@
 <template>
   <Nav />
-  <div>
-    <h1>Profil</h1>
-    <form
-      @submit.prevent="handleSubmit(user.id)"
-      method="post"
-      enctype="multipart/form-data"
-    >
-      <h2>Nom d'utilisateur</h2>
+  <main>
+    <article>
+      <h1>Profil</h1>
+      <form
+        @submit.prevent="handleSubmit(user.id)"
+        method="post"
+        enctype="multipart/form-data"
+      >
+        <h2>Nom d'utilisateur</h2>
 
-      <input type="text" v-model="username" />
+        <input type="text" v-model="username" />
 
-      <h2>Email</h2>
-      <input type="text" v-model="email" />
+        <h2>Email</h2>
+        <input type="text" v-model="email" />
 
-      <h2>Biographie</h2>
-      <input type="text" v-model="biography" />
+        <h2>Biographie</h2>
+        <input type="text" v-model="biography" />
 
-      <h2>Mot de passe</h2>
-      <input type="text" v-model="password" />
-      <h2>Image de profil</h2>
-      <img :src="user.image" alt="img" />
+        <h2>Mot de passe</h2>
+        <input type="text" v-model="password" />
+        <h2>Image de profil</h2>
+        <img :src="user.image" alt="img" />
 
-      <input
-        type="file"
-        placeholder="ta photo de profil"
-        ref="file"
-        @change="handleChange"
-      />
+        <input
+          type="file"
+          placeholder="ta photo de profil"
+          ref="file"
+          @change="handleChange"
+        />
 
-      <button type="submit">Modifier</button>
-    </form>
-    <br />
-    <form @submit.prevent="handleDelete(user.id)" method="post">
-      <button type="submit">Supprimer votre compte</button>
-      <p>Attention, cette action supprimera toutes vos données</p>
-    </form>
-  </div>
+        <button type="submit">Modifier</button>
+      </form>
+      <br />
+      <form @submit.prevent="handleDelete(user.id)" method="post">
+        <button type="submit">Supprimer votre compte</button>
+        <p>Attention, cette action supprimera toutes vos données</p>
+      </form>
+    </article>
+  </main>
 </template>
 
 <script>
@@ -105,17 +107,47 @@ export default {
           },
         })
         .then(function (response) {
-          console.log(response);
+          console.log(response.data);
+
           window.location.reload();
         })
         .catch((error) => console.error(error.response));
     },
-    reloadPage() {
-      window.location.reload();
+    handleDelete(id, image) {
+      const token = localStorage.getItem("token");
+      //console.log(id);
+      axios
+        .delete("http://localhost:3000/api/auth/deleteOneUser/" + id, {
+          headers: { Authorization: `Bearer ${token}` },
+          image,
+        })
+        .then((res) => {
+          console.log(res);
+
+          window.location.reload();
+        })
+        .catch((error) => console.log(error));
     },
   },
 };
 </script>
 
 <style scoped>
+main {
+  background: var(--grey);
+  padding: 1em;
+}
+article {
+  padding: 1em;
+  max-width: 40em;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  border-radius: 8px;
+  background: white;
+  box-shadow: 0 1px 2px 0 rgb(0 0 0 / 20%);
+}
+article img {
+  max-width: 10em;
+}
 </style>

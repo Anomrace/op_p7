@@ -12,7 +12,6 @@
       v-model="username"
     />
     <input type="text" required placeholder="Biographie" v-model="biography" />
-    <label for="image">Profile Image</label>
 
     <input
       type="file"
@@ -32,8 +31,6 @@
 
 <script>
 import axios from "axios";
-
-import { useRouter } from "vue-router";
 
 export default {
   name: "Signup",
@@ -73,17 +70,15 @@ export default {
       for (var pair of myformData.entries()) {
         console.log(pair[0] + ", " + pair[1]);
       }
-
-      const router = useRouter();
       axios
         .post("http://localhost:3000/api/auth/signup", myformData, {
           headers: { "Content-Type": "multipart/form-data" },
         })
-        .then(function (response) {
+        .then((response) => {
           console.log(response);
-          router.push("/");
+          window.location.reload();
         })
-        .catch((error) => console.error(error.response));
+        .catch((error) => console.error(error));
     },
   },
 };

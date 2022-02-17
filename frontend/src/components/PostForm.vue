@@ -30,7 +30,7 @@
       <br /><br />
       <label for="vraiBouton">Ajouter une image</label>
       <br /><br />
-      <span>Aucun fichier choisi</span>
+      <span>{{ filename }}</span>
       <br />
       <br />
 
@@ -50,12 +50,14 @@ export default {
       content: "",
       userName: localStorage.getItem("username"),
       userImage: localStorage.getItem("userImage"),
+      filename: "",
     };
   },
   methods: {
     handleChange() {
       const file = this.$refs.file.files[0];
       this.file = file;
+      this.filename = this.$refs.file.files[0].name;
       // let fichierChoisi = this.file.name;
       console.log(this.file);
     },

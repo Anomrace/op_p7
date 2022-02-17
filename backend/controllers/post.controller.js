@@ -79,24 +79,14 @@ exports.update = (req, res) => {
   // console.log(token);
   const decodedToken = jwt.verify(token, "TOKEN_TEST");
   const userId = decodedToken.userId;
+  const userStatus = decodedToken.userStatus;
 
-  // console.log(req.body)
-  // Post.findByPk(id)
-  // .then(data => {
-  //   console.log(data.image)
-  // })
-  //       .catch(err => {
-  //         res.status(500).send({
-  //         message: "Erreur pour le post id=" + id
-  //         });
-  //       });
-  // on cherche le post en donnant l'id
   Post.findByPk(id)
     // si le poste existe
     .then((data) => {
       console.log(data.UserId);
       // si l'id de l'utilisateur qui essaye de modifier le poste correspond à l'utilisateur qui l'a crée ou si le userID est celui de l'administrateur alors
-      if (data.UserId === userId) {
+      if (data.UserId === userId || data.UserStatus === userStatus) {
         // création de MonImage qui correspond à l'image actuellement utilisée par le post
         let MonImage = data.image;
 
