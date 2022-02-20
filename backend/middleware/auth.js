@@ -1,5 +1,6 @@
 const jwt = require("jsonwebtoken");
 
+// verifie l'authentification des accès api
 module.exports = (req, res, next) => {
   try {
     const token = req.headers.authorization.split(" ")[1];
@@ -7,8 +8,6 @@ module.exports = (req, res, next) => {
     const decodedToken = jwt.verify(token, "TOKEN_TEST");
     const userId = decodedToken.userId;
     req.userId = userId;
-
-    // console.log(token , decodedToken, userId , req.body.userId)
 
     if (req.body.userId && req.body.userId != userId) {
       throw "User id non valable";

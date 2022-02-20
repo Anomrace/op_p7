@@ -1,7 +1,7 @@
 <template>
   <main>
     <section class="content" v-if="showLogin">
-      <img src="@/assets/images/icon-above-font.svg" alt="logo groupomania" />
+      <img src="@/assets/images/icon-above.svg" alt="logo groupomania" />
       <LoginForm />
       <br />
       <p>Pas encore de compte ?</p>
@@ -9,7 +9,7 @@
       <button @click="showLogin = false">S'inscrire</button>
     </section>
     <section class="content" v-else>
-      <img src="@/assets/images/icon-above-font.svg" alt="logo groupomania" />
+      <img src="@/assets/images/icon-above.svg" alt="logo groupomania" />
       <h2>S'inscrire</h2>
       <SignupForm />
       <br />

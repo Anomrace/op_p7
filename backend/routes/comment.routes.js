@@ -12,7 +12,4 @@ router.put("/:id", auth, comments.update);
 // supprimer un comment avec un id
 router.delete("/:id", auth, comments.delete);
 
-// Supprimer tous les comments
-router.delete("/", auth, comments.deleteAll);
-
 module.exports = router;

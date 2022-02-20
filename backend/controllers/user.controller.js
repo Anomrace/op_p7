@@ -1,12 +1,9 @@
 const db = require("../models");
 const fs = require("fs");
-const post = require("../models/post");
 const User = db.users;
 const Post = db.posts;
 var jwt = require("jsonwebtoken");
 var bcrypt = require("bcrypt");
-const user = require("../models/user");
-const { Op } = require("sequelize");
 
 exports.signup = (req, res, next) => {
   console.log(req.body, req.file);

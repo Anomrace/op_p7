@@ -3,7 +3,9 @@
     <div class="modal">
       <header>
         <slot name="header"> Editer votre post </slot>
-        <button type="button" class="btn-close" @click="close">x</button>
+        <button type="button" class="btn-close" @click="$emit('closeModal')">
+          x
+        </button>
       </header>
 
       <section>
@@ -25,7 +27,7 @@
         </form>
       </section>
 
-      <!-- <button type="button" @click="close">Close Modal</button> -->
+      <button type="button" @click="$emit('closeModal')">Close Modal</button>
     </div>
   </div>
 </template>
@@ -34,10 +36,11 @@
 import axios from "axios";
 
 export default {
-  name: "Modal",
-  props: ["post"],
+  name: "PostEdit",
+  props: ["post", "isModalVisible"],
   data(props) {
     return {
+      modalIsNotVisible: false,
       title: props.post.title,
       content: props.post.content,
       image: props.post.image,
@@ -71,12 +74,12 @@ export default {
         .then(function (response) {
           console.log(response);
           this.close();
-          this.reloadPage();
+          // this.reloadPage();
         })
         .catch((error) => console.error(error.response));
     },
     close() {
-      this.$emit("close");
+      this.modalIsNotVisible = true;
     },
     reloadPage() {
       window.location.reload();

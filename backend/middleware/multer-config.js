@@ -1,3 +1,4 @@
+// gère les fichiers envoyés au back
 const multer = require("multer");
 
 const MIME_TYPES = {

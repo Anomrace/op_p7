@@ -9,6 +9,12 @@
         <h2>{{ post.title }}</h2>
         <p>{{ post.content }}</p>
       </section>
+      <!-- <div v-show="isModalVisible[post.id]">
+        <form @submit.prevent="handleSubmit(post.id)" method="post">
+          <input type="text" required v-model="title" />
+          <input type="text" required v-model="content" />
+        </form>
+      </div> -->
     </section>
 
     <section>
@@ -19,7 +25,12 @@
       v-if="post.User.username === localUsername || userStatus === '1'"
       class="post-edit-delete"
     >
-      <button type="button" class="btn" :post="post" @click="showModal()">
+      <button
+        type="button"
+        class="btn"
+        :post="post"
+        @click="showModal(post.id, true)"
+      >
         Editer le post
       </button>
 
@@ -31,12 +42,17 @@
       <Comments :comments="post.Comments" :postID="post.id" />
     </div>
 
-    <PostEdit :post="post" v-show="isModalVisible" @close="closeModal" />
+    <PostEdit
+      :post="post"
+      v-show="isModalVisible[post.id]"
+      @closeModal="closeModal"
+    />
   </article>
 </template>
 
 <script>
 import axios from "axios";
+// import { ref } from "vue";
 import PostEdit from "./PostEdit.vue";
 import Comments from "./Comments.vue";
 export default {
@@ -61,17 +77,21 @@ export default {
         })
         .catch((error) => console.log(error));
     },
-    showModal() {
-      this.isModalVisible = true;
+    showModal(id, status) {
+      if (status) {
+        this.isModalVisible[id] = true;
+      } else {
+        this.isModalVisible[id] = false;
+      }
     },
     closeModal() {
-      this.isModalVisible = false;
+      this.isModalVisible = {};
     },
   },
   data() {
     return {
       posts: [],
-      isModalVisible: false,
+      isModalVisible: {},
       postId: 0,
       commentID: 0,
       userStatus: localStorage.getItem("userStatus"),
@@ -92,19 +112,6 @@ export default {
       })
       .catch((error) => console.error(error.response.data));
   },
-  // mounted() {
-  //   const token = localStorage.getItem("token");
-  //   axios
-  //     .get("http://localhost:3000/api/posts", {
-  //       headers: { Authorization: `Bearer ${token}` },
-  //     })
-  //     .then((response) => {
-  //       console.log(response.data);
-  //       this.posts = response.data;
-  //       console.log(this.posts);
-  //     })
-  //     .catch((error) => console.error(error.response.data));
-  // },
 };
 </script>
 

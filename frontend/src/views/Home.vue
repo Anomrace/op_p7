@@ -45,14 +45,6 @@ h2 {
 }
 
 .neuf {
-  margin-bottom: 1em;
-  padding: 1em;
-  max-width: 40em;
-  display: block;
-  margin-left: auto;
-  margin-right: auto;
-  border-radius: 8px;
-  background: white;
-  box-shadow: 0 1px 2px 0 rgb(0 0 0 / 20%);
+  margin-bottom: 2em;
 }
 </style>

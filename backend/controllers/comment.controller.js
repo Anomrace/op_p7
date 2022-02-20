@@ -6,6 +6,7 @@ const post = require("../models/post");
 const user = require("../models/user");
 const jwt = require("jsonwebtoken");
 
+// Création d'un commentaire
 exports.create = (req, res) => {
   // Valider la requête
   if (!req.body.content) {
@@ -15,7 +16,6 @@ exports.create = (req, res) => {
     return;
   }
   const token = req.headers.authorization.split(" ")[1];
-  // console.log(token);
   const decodedToken = jwt.verify(token, "TOKEN_TEST");
   const userId = decodedToken.userId;
   console.log(req.body);
@@ -37,15 +37,13 @@ exports.create = (req, res) => {
     });
 };
 
+// Modification du commentaire
 exports.update = (req, res) => {
   const id = req.params.id;
   const token = req.headers.authorization.split(" ")[1];
-  // console.log(token);
   const decodedToken = jwt.verify(token, "TOKEN_TEST");
   const userId = decodedToken.userId;
   const userStatus = decodedToken.userStatus;
-
-  console.log(req.body, id);
 
   Comment.findByPk(id)
     .then((data) => {
@@ -85,32 +83,9 @@ exports.update = (req, res) => {
         message: "Erreur pour le post id=" + id,
       });
     });
-  // Comment.update(
-  //   {
-  //     content: req.body.content,
-  //   },
-  //   {
-  //     where: { id: id },
-  //   }
-  // )
-  //   .then((num) => {
-  //     if (num == 1) {
-  //       res.send({
-  //         message: "Le commentaire a été modifié avec succès",
-  //       });
-  //     } else {
-  //       res.send({
-  //         message: `Impossible de modifier le commentaire id=${id}. Le post est peut etre introuvable ou le body est vide`,
-  //       });
-  //     }
-  //   })
-  //   .catch((err) => {
-  //     res.status(500).send({
-  //       message: "Erreur dans la mise à jour du commentaire id=" + id,
-  //     });
-  //   });
 };
 
+// Suppression du commentaire
 exports.delete = (req, res) => {
   const id = req.params.id;
 
@@ -131,25 +106,6 @@ exports.delete = (req, res) => {
     .catch((err) => {
       res.status(500).send({
         message: "Erreur dans la suppression du commentaire id=" + id,
-      });
-    });
-};
-
-exports.deleteAll = (req, res) => {
-  Comment.destroy({
-    where: {},
-    truncate: false,
-  })
-    .then((nums) => {
-      res.send({
-        message: `${nums} Tous les commentaires ont été supprimé avec succès`,
-      });
-    })
-    .catch((err) => {
-      res.status(500).send({
-        message:
-          err.message ||
-          "Une erreur est survenu lors de la suppression des commentaires.",
       });
     });
 };

@@ -84,23 +84,6 @@ export default {
   },
 
   methods: {
-    // handleSubmit(id) {
-    //   const content = this.content;
-
-    //   const token = localStorage.getItem("token");
-    //   console.log(this.content);
-    //   axios
-    //     .put("http://localhost:3000/api/comments/" + id, content, {
-    //       headers: {
-    //         Authorization: `Bearer ${token}`,
-    //       },
-    //     })
-    //     .then(function (response) {
-    //       console.log(response);
-    //       // window.location.reload();
-    //     })
-    //     .catch((error) => console.error(error.response));
-    // },
     deleteComment(id) {
       const token = localStorage.getItem("token");
       //console.log(id);

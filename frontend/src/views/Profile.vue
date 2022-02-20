@@ -33,10 +33,11 @@
         <button type="submit">Modifier</button>
       </form>
       <br />
+
       <form @submit.prevent="handleDelete(user.id)" method="post">
         <button type="submit">Supprimer votre compte</button>
-        <p>Attention, cette action supprimera toutes vos données</p>
       </form>
+      <p>Attention, cette action supprimera toutes vos données</p>
     </article>
   </main>
 </template>
@@ -44,6 +45,7 @@
 <script>
 import axios from "axios";
 import Nav from "../components/Nav.vue";
+// import { useRouter } from "vue-router";
 export default {
   name: "Profile",
   components: {
@@ -108,6 +110,7 @@ export default {
         })
         .then(function (response) {
           console.log(response.data);
+          localStorage.setItem("userImage", response.data.userImage);
 
           window.location.reload();
         })
@@ -116,6 +119,7 @@ export default {
     handleDelete(id, image) {
       const token = localStorage.getItem("token");
       //console.log(id);
+
       axios
         .delete("http://localhost:3000/api/auth/deleteOneUser/" + id, {
           headers: { Authorization: `Bearer ${token}` },
@@ -123,8 +127,9 @@ export default {
         })
         .then((res) => {
           console.log(res);
+          this.$router.push("/");
 
-          window.location.reload();
+          localStorage.clear();
         })
         .catch((error) => console.log(error));
     },

@@ -92,6 +92,19 @@ export default {
       window.location.reload();
     },
   },
+  mounted() {
+    const token = localStorage.getItem("token");
+    axios
+      .get("http://localhost:3000/api/auth/findUser", {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+      .then((response) => {
+        console.log(response);
+        this.userImage = response.data.image;
+        this.userName = response.data.username;
+      })
+      .catch((error) => console.error(error.response.data));
+  },
 };
 </script>
 

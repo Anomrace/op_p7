@@ -3,19 +3,15 @@ const Post = db.posts;
 const User = db.users;
 const Comment = db.comments;
 const jwt = require("jsonwebtoken");
-const post = require("../models/post");
-const user = require("../models/user");
 const fs = require("fs");
 const path = require("path");
 
+// Création d'un post
 exports.create = (req, res) => {
   const token = req.headers.authorization.split(" ")[1];
-  // console.log(token);
   const decodedToken = jwt.verify(token, "TOKEN_TEST");
   const userId = decodedToken.userId;
 
-  // Sauver un post dans la DB
-  // console.log(req.body, req.file)
   Post.create({
     title: req.body.title,
     content: req.body.content,
@@ -35,8 +31,8 @@ exports.create = (req, res) => {
     });
 };
 
+// Trouver tous les posts
 exports.findAll = (req, res) => {
-  // console.log(User)
   Post.findAll({
     order: [["updatedAt", "DESC"]],
     include: [
@@ -59,6 +55,7 @@ exports.findAll = (req, res) => {
     });
 };
 
+// Trouver un post avec l'id
 exports.findOne = (req, res) => {
   const id = req.params.id;
 
@@ -73,10 +70,11 @@ exports.findOne = (req, res) => {
     });
 };
 
+// Modifier un post
+
 exports.update = (req, res) => {
   const id = req.params.id;
   const token = req.headers.authorization.split(" ")[1];
-  // console.log(token);
   const decodedToken = jwt.verify(token, "TOKEN_TEST");
   const userId = decodedToken.userId;
   const userStatus = decodedToken.userStatus;
@@ -168,14 +166,14 @@ exports.update = (req, res) => {
     });
 };
 
+// Supprimer un post
 exports.delete = (req, res) => {
   const id = req.params.id;
   const token = req.headers.authorization.split(" ")[1];
-  // console.log(token);
   const decodedToken = jwt.verify(token, "TOKEN_TEST");
   const userId = decodedToken.userId;
   const userStatus = decodedToken.userStatus;
-  // console.log(req.params)
+
   Post.findByPk(id)
     .then((data) => {
       if (data.UserId === userId || data.UserStatus === userStatus) {
@@ -209,25 +207,6 @@ exports.delete = (req, res) => {
     .catch((err) => {
       res.status(500).send({
         message: "Erreur pour le post id=" + id,
-      });
-    });
-};
-
-exports.deleteAll = (req, res) => {
-  Post.destroy({
-    where: {},
-    truncate: false,
-  })
-    .then((data) => {
-      res
-        .status(201)
-        .send({ message: ` Tous les posts ont été supprimé avec succès` });
-    })
-    .catch((err) => {
-      res.status(500).send({
-        message:
-          err.message ||
-          "Une erreur est survenu lors de la suppression des posts.",
       });
     });
 };

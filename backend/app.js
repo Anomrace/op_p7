@@ -4,13 +4,6 @@ const app = express();
 const path = require("path");
 const db = require("./models");
 
-// const Comment = db.comment;
-// var corsOptions = {
-//   origin: "*"
-// };
-
-// app.use(cors(corsOptions));
-
 app.use(cors());
 app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
@@ -25,15 +18,10 @@ app.use((req, res, next) => {
   next();
 });
 
-// const PORT = process.env.PORT || 3000;
-// app.listen(PORT, () => {
-//   console.log(`Server is running on port ${PORT}.`);
-// });
-
 const postRoutes = require("./routes/post.routes");
 const commentRoutes = require("./routes/comment.routes");
 const userRoutes = require("./routes/user.routes");
-// parse requests of content-type - application/x-www-form-urlencoded
+
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
