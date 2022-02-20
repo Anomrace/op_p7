@@ -1,3 +1,4 @@
+// connexion avec la base et définition des tables
 const dbConfig = require("../config/db.config.js");
 const { applyExtraSetup } = require("./extra-setup");
 
