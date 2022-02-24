@@ -44,7 +44,7 @@
 <script>
 import axios from "axios";
 import CommentsForm from "./CommentsForm.vue";
-// import { reactive } from "vue";
+
 import { Form, Field, defineRule, ErrorMessage } from "vee-validate";
 import { required } from "@vee-validate/rules";
 
@@ -117,56 +117,6 @@ export default {
       window.location.reload();
     },
   },
-  // setup() {
-  //   let form = reactive({
-  //     content: "",
-  //   });
-
-  //   let handleSubmit = async (id) => {
-  //     form.commentID = id;
-  //     const token = localStorage.getItem("token");
-  //     await axios
-  //       .put("http://localhost:3000/api/comments/" + id, form, {
-  //         headers: { Authorization: `Bearer ${token}` },
-  //       })
-  //       .then(function (response) {
-  //         console.log(response);
-  //         window.location.reload();
-  //       })
-  //       .catch((error) => console.error(error.response.data));
-  //   };
-
-  //   return {
-  //     form,
-  //     handleSubmit,
-  //   };
-  // },
-
-  // methods: {
-  //   deleteComment(id) {
-  //     const token = localStorage.getItem("token");
-  //     //console.log(id);
-  //     axios
-  //       .delete("http://localhost:3000/api/comments/" + id, {
-  //         headers: { Authorization: `Bearer ${token}` },
-  //       })
-  //       .then((res) => {
-  //         console.log(res);
-  //         window.location.reload();
-  //       })
-  //       .catch((error) => console.log(error));
-  //   },
-  //   showComment() {
-  //     this.isCommentVisible = !this.isCommentVisible;
-  //   },
-  //   showCommentEditForm(id, status) {
-  //     if (status) {
-  //       this.isCommentEditFormVisible[id] = true;
-  //     } else {
-  //       this.isCommentEditFormVisible[id] = false;
-  //     }
-  //   },
-  // },
 };
 </script>
 
@@ -180,16 +130,12 @@ export default {
 article {
   padding: 1em;
 }
-/* .display-none {
-  display: none;
-} */
+
 .active {
   display: inline;
   border: red solid 1px;
 }
-/* .btn-editer-supprimer-commentaire {
-  display: none;
-} */
+
 .commentaire {
   display: flex;
   gap: 1em;

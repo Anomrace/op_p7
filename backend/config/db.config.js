@@ -7,6 +7,7 @@ module.exports = {
   DB: process.env.DB,
   PORT: process.env.DB_PORT,
   dialect: "mysql",
+  TOKEN: process.env.TOKEN,
   pool: {
     max: 5,
     min: 0,
@@ -14,4 +15,4 @@ module.exports = {
     idle: 10000,
   },
 };
-console.log(process.env.USER);
+console.log(process.env.TOKEN);

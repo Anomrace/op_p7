@@ -5,6 +5,7 @@ const Comment = db.comments;
 const post = require("../models/post");
 const user = require("../models/user");
 const jwt = require("jsonwebtoken");
+const config = require("../config/db.config");
 
 // Création d'un commentaire
 exports.create = (req, res) => {
@@ -16,7 +17,7 @@ exports.create = (req, res) => {
     return;
   }
   const token = req.headers.authorization.split(" ")[1];
-  const decodedToken = jwt.verify(token, "TOKEN_TEST");
+  const decodedToken = jwt.verify(token, "config.TOKEN");
   const userId = decodedToken.userId;
   console.log(req.body);
 
@@ -41,7 +42,7 @@ exports.create = (req, res) => {
 exports.update = (req, res) => {
   const id = req.params.id;
   const token = req.headers.authorization.split(" ")[1];
-  const decodedToken = jwt.verify(token, "TOKEN_TEST");
+  const decodedToken = jwt.verify(token, "config.TOKEN");
   const userId = decodedToken.userId;
   const userStatus = decodedToken.userStatus;
   console.log(req.body);

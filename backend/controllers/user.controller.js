@@ -4,6 +4,7 @@ const User = db.users;
 const Post = db.posts;
 var jwt = require("jsonwebtoken");
 var bcrypt = require("bcrypt");
+const config = require("../config/db.config");
 
 exports.signup = (req, res, next) => {
   console.log(req.body, req.file);
@@ -61,7 +62,7 @@ exports.signin = (req, res) => {
                   userId: user.id,
                   userStatus: user.status,
                 },
-                "TOKEN_TEST",
+                config.TOKEN,
                 {
                   expiresIn: "24h",
                 }
@@ -108,24 +109,13 @@ exports.checkUser = (req, res, next) => {
   res.status(200).json({ user: true });
 };
 
-// exports.test = (req, res, next) => {
-//   console.log("ok");
-//   fs.unlink(`app/images/beethoven_jpeg1643893200415.jpg`, (err) => {
-//     if (err) {
-//       console.log(err);
-//     } else {
-//       console.log("le fichier a bien été supprimé");
-//     }
-//   });
-// };
-
 exports.updateUser = (req, res, next) => {
   //console.log(req.file.filename)
   const id = req.params.id;
 
   const token = req.headers.authorization.split(" ")[1];
   // console.log(token);
-  const decodedToken = jwt.verify(token, "TOKEN_TEST");
+  const decodedToken = jwt.verify(token, config.TOKEN);
   const userId = decodedToken.userId;
   const userStatus = decodedToken.userStatus;
 
@@ -210,7 +200,7 @@ exports.deleteOneUser = (req, res, next) => {
   const id = req.params.id;
   const token = req.headers.authorization.split(" ")[1];
   // console.log(token);
-  const decodedToken = jwt.verify(token, "TOKEN_TEST");
+  const decodedToken = jwt.verify(token, config.TOKEN);
   Post.findAll({
     where: { userId: id },
   }).then((data) => {

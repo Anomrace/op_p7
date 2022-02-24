@@ -49,30 +49,6 @@ export default {
       window.location.reload();
     },
   },
-  // setup() {
-  //   let form = reactive({
-  //     content: "",
-  //   });
-
-  //   let handleSubmit = async (postID) => {
-  //     form.postID = postID;
-  //     const token = localStorage.getItem("token");
-  //     await axios
-  //       .post("http://localhost:3000/api/comments", form, {
-  //         headers: { Authorization: `Bearer ${token}` },
-  //       })
-  //       .then(function (response) {
-  //         console.log(response);
-  //         window.location.reload();
-  //       })
-  //       .catch((error) => console.error(error.response.data));
-  //   };
-
-  //   return {
-  //     form,
-  //     handleSubmit,
-  //   };
-  // },
 };
 </script>
 
@@ -80,6 +56,5 @@ export default {
 .comments-form {
   border-radius: 20px;
   padding: 1em;
-  /* box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.2); */
 }
 </style>

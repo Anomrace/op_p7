@@ -5,11 +5,12 @@ const Comment = db.comments;
 const jwt = require("jsonwebtoken");
 const fs = require("fs");
 const path = require("path");
+const config = require("../config/db.config");
 
 // Création d'un post
 exports.create = (req, res) => {
   const token = req.headers.authorization.split(" ")[1];
-  const decodedToken = jwt.verify(token, "TOKEN_TEST");
+  const decodedToken = jwt.verify(token, "config.TOKEN");
   const userId = decodedToken.userId;
 
   Post.create({
@@ -75,7 +76,7 @@ exports.findOne = (req, res) => {
 exports.update = (req, res, next) => {
   const id = req.params.id;
   const token = req.headers.authorization.split(" ")[1];
-  const decodedToken = jwt.verify(token, "TOKEN_TEST");
+  const decodedToken = jwt.verify(token, "config.TOKEN");
   const userId = decodedToken.userId;
   const userStatus = decodedToken.userStatus;
 
@@ -159,7 +160,7 @@ exports.update = (req, res, next) => {
 exports.delete = (req, res) => {
   const id = req.params.id;
   const token = req.headers.authorization.split(" ")[1];
-  const decodedToken = jwt.verify(token, "TOKEN_TEST");
+  const decodedToken = jwt.verify(token, "config.TOKEN");
   const userId = decodedToken.userId;
   const userStatus = decodedToken.userStatus;
 

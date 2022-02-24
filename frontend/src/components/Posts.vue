@@ -9,12 +9,6 @@
         <h2>{{ post.title }}</h2>
         <p>{{ post.content }}</p>
       </section>
-      <!-- <div v-show="isModalVisible[post.id]">
-        <form @submit.prevent="handleSubmit(post.id)" method="post">
-          <input type="text" required v-model="title" />
-          <input type="text" required v-model="content" />
-        </form>
-      </div> -->
     </section>
 
     <section>
