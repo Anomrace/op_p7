@@ -1,52 +1,78 @@
 <template>
   <section class="comments-form">
-    <form @submit.prevent="handleSubmit(postID)" method="post">
-      <input
-        type="text"
-        required
-        placeholder="votre commentaire"
-        v-model="form.content"
-      />
-      <!-- <button type="submit" @click="reloadPage">Publier</button> -->
-    </form>
+    <Form @submit="handleSubmit(postID)" method="post">
+      <Field name="content" type="text" v-model="content" rules="required" />
+      <ErrorMessage name="content" />
+    </Form>
   </section>
 </template>
 
 <script>
 import axios from "axios";
-import { reactive } from "vue";
+import { Form, Field, defineRule, ErrorMessage } from "vee-validate";
+import { required } from "@vee-validate/rules";
+// import { reactive } from "vue";
+defineRule("required", required);
 export default {
   name: "CommentsForm",
   props: ["postID"],
-  setup() {
-    let form = reactive({
+  data() {
+    return {
       content: "",
-    });
-
-    let handleSubmit = async (postID) => {
-      form.postID = postID;
+    };
+  },
+  components: {
+    Field,
+    Form,
+    ErrorMessage,
+  },
+  methods: {
+    handleSubmit(id) {
+      const form = {
+        content: this.content,
+        postID: id,
+      };
       const token = localStorage.getItem("token");
-      await axios
+      axios
         .post("http://localhost:3000/api/comments", form, {
           headers: { Authorization: `Bearer ${token}` },
         })
-        .then(function (response) {
+        .then((response) => {
           console.log(response);
           window.location.reload();
         })
-        .catch((error) => console.error(error.response.data));
-    };
-
-    return {
-      form,
-      handleSubmit,
-    };
-  },
-  methods: {
+        .catch((error) => {
+          console.log(error);
+        });
+    },
     reloadPage() {
       window.location.reload();
     },
   },
+  // setup() {
+  //   let form = reactive({
+  //     content: "",
+  //   });
+
+  //   let handleSubmit = async (postID) => {
+  //     form.postID = postID;
+  //     const token = localStorage.getItem("token");
+  //     await axios
+  //       .post("http://localhost:3000/api/comments", form, {
+  //         headers: { Authorization: `Bearer ${token}` },
+  //       })
+  //       .then(function (response) {
+  //         console.log(response);
+  //         window.location.reload();
+  //       })
+  //       .catch((error) => console.error(error.response.data));
+  //   };
+
+  //   return {
+  //     form,
+  //     handleSubmit,
+  //   };
+  // },
 };
 </script>
 

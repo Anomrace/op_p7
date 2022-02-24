@@ -44,7 +44,7 @@ exports.update = (req, res) => {
   const decodedToken = jwt.verify(token, "TOKEN_TEST");
   const userId = decodedToken.userId;
   const userStatus = decodedToken.userStatus;
-
+  console.log(req.body);
   Comment.findByPk(id)
     .then((data) => {
       if (data.UserId === userId || data.UserStatus === userStatus) {

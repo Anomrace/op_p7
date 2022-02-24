@@ -89,8 +89,8 @@ export default {
         })
         .then((res) => {
           console.log(res);
-
-          window.location.reload();
+          this.$router.push("/");
+          localStorage.clear();
         })
         .catch((error) => console.log(error));
     },

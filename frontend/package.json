@@ -12,7 +12,10 @@
     "@fortawesome/free-regular-svg-icons": "^6.0.0-beta3",
     "@fortawesome/free-solid-svg-icons": "^6.0.0",
     "@fortawesome/vue-fontawesome": "^3.0.0-5",
+    "@vee-validate/rules": "^4.5.9",
+    "axios": "^0.26.0",
     "core-js": "^3.6.5",
+    "vee-validate": "^4.5.9",
     "vue": "^3.0.0",
     "vue-router": "^4.0.0-0",
     "vuex": "^4.0.0-0"

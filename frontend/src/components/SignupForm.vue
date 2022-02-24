@@ -1,39 +1,68 @@
 <template>
-  <form
-    @submit.prevent="handleSubmit"
-    method="post"
-    enctype="multipart/form-data"
-  >
-    <input type="email" required placeholder="Email" v-model="email" />
-    <input
+  <Form @submit="handleSubmit" enctype="multipart/form-data">
+    <Field
+      name="email"
+      type="email"
+      placeholder="Email"
+      rules="required|email"
+      v-model="email"
+    />
+    <ErrorMessage name="email" />
+    <Field
+      name="username"
       type="text"
-      required
       placeholder="Nom d'utilisateur"
+      rules="required"
       v-model="username"
     />
-    <input type="text" required placeholder="Biographie" v-model="biography" />
-
-    <input
-      type="file"
-      placeholder="ta photo de profil"
-      ref="file"
-      @change="handleChange"
+    <ErrorMessage name="username" />
+    <Field
+      name="biography"
+      type="text"
+      placeholder="Biographie"
+      rules="required"
+      v-model="biography"
     />
-    <input
+    <ErrorMessage name="biography" />
+    <Field name="userimage">
+      <input
+        type="file"
+        ref="file"
+        accept="image/*"
+        rules="required|image"
+        @change="handleChange"
+      />
+    </Field>
+    <ErrorMessage name="userimage" />
+    <Field
+      name="password"
       type="password"
-      required
+      rules="required|min:6"
       placeholder="Mot de passe"
       v-model="password"
     />
+    <ErrorMessage name="password" />
     <button type="submit">Inscription</button>
-  </form>
+  </Form>
 </template>
 
 <script>
 import axios from "axios";
+import { Form, Field, defineRule, ErrorMessage } from "vee-validate";
+import { required, email, min, image } from "@vee-validate/rules";
+
+defineRule("required", required);
+defineRule("email", email);
+defineRule("min", min);
+defineRule("image", image);
 
 export default {
   name: "Signup",
+  components: {
+    Form,
+    Field,
+    ErrorMessage,
+  },
   data() {
     return {
       file: "",
@@ -41,6 +70,7 @@ export default {
       username: "",
       biography: "",
       password: "",
+      errorEmail: "Votre email est invalide",
     };
   },
   methods: {

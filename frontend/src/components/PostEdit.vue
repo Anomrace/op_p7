@@ -9,22 +9,32 @@
       </header>
 
       <section>
-        <form
-          @submit.prevent="handleSubmit(post.id, post.image)"
+        <Form
+          @submit="handleSubmit(post.id, post.image)"
           method="post"
           enctype="multipart/form-data"
         >
-          <input type="text" v-model="title" />
-          <input type="text" v-model="content" />
-          <img v-if="post.image !== null" :src="post.image" alt="img" />
-          <input
-            type="file"
-            placeholder="ta photo de profil"
-            ref="file"
-            @change="handleChange"
+          <Field name="title" type="text" v-model="title" rules="required" />
+          <ErrorMessage name="title" />
+          <Field
+            name="content"
+            type="text"
+            v-model="content"
+            rules="required"
           />
-          <button type="submit" @click="reloadPage">Publier</button>
-        </form>
+          <ErrorMessage name="content" />
+          <img v-if="post.image !== null" :src="post.image" alt="img" />
+          <Field name="userimage" placeholder="ta photo de profil"
+            ><input
+              type="file"
+              ref="file"
+              accept="image/*"
+              @change="handleChange"
+              rules="image" /><ErrorMessage name="userimage"
+          /></Field>
+
+          <button type="submit">Publier</button>
+        </Form>
       </section>
 
       <button type="button" @click="$emit('closeModal')">Close Modal</button>
@@ -34,10 +44,22 @@
 
 <script>
 import axios from "axios";
+import { Form, Field, defineRule, ErrorMessage } from "vee-validate";
+import { required, email, min, mimes } from "@vee-validate/rules";
+
+defineRule("required", required);
+defineRule("email", email);
+defineRule("min", min);
+defineRule("mimes", mimes);
 
 export default {
   name: "PostEdit",
   props: ["post", "isModalVisible"],
+  components: {
+    Form,
+    Field,
+    ErrorMessage,
+  },
   data(props) {
     return {
       modalIsNotVisible: false,
@@ -68,13 +90,13 @@ export default {
         .put("http://localhost:3000/api/posts/" + id, myformData, {
           headers: {
             Authorization: `Bearer ${token}`,
-            "Content-Type": "multipart/form-data",
+            "Content-Type": "multipart/Form-data",
           },
         })
-        .then(function (response) {
+        .then((response) => {
           console.log(response);
           this.close();
-          // this.reloadPage();
+          this.reloadPage();
         })
         .catch((error) => console.error(error.response));
     },

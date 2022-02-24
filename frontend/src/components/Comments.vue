@@ -24,14 +24,16 @@
     </div>
 
     <div v-show="isCommentEditFormVisible[comment.id]">
-      <form @submit.prevent="handleSubmit(comment.id)" method="post">
-        <input type="text" required v-model="form.content" />
-      </form>
+      <Form @submit="handleSubmit(comment.id)" method="post">
+        <Field name="content" type="text" v-model="content" />
+        <ErrorMessage name="content" />
+      </Form>
     </div>
 
     <div
       v-if="comment.User.username === localUsername || userStatus === '1'"
       class="btn-editer-supprimer-commentaire"
+      v-show="!isCommentEditFormVisible[comment.id]"
     >
       <button @click="showCommentEditForm(comment.id, true)">Modifier</button>
       <button @click="deleteComment(comment.id)">Supprimer</button>
@@ -42,48 +44,52 @@
 <script>
 import axios from "axios";
 import CommentsForm from "./CommentsForm.vue";
-import { reactive } from "vue";
+// import { reactive } from "vue";
+import { Form, Field, defineRule, ErrorMessage } from "vee-validate";
+import { required } from "@vee-validate/rules";
+
+defineRule("required", required);
 
 export default {
   name: "Comments",
   components: {
     CommentsForm,
+    Field,
+    Form,
+    ErrorMessage,
   },
   props: ["comments", "postID"],
   data() {
     return {
+      content: "",
       isCommentEditFormVisible: {},
+      isCommentEditButtonFormVisible: true,
       isCommentVisible: false,
       userStatus: localStorage.getItem("userStatus"),
       localUsername: localStorage.getItem("username"),
     };
   },
-  setup() {
-    let form = reactive({
-      content: "",
-    });
 
-    let handleSubmit = async (id) => {
-      form.commentID = id;
+  methods: {
+    handleSubmit(id) {
       const token = localStorage.getItem("token");
-      await axios
+      const form = {
+        content: this.content,
+        commentID: id,
+      };
+
+      axios
         .put("http://localhost:3000/api/comments/" + id, form, {
           headers: { Authorization: `Bearer ${token}` },
         })
-        .then(function (response) {
+        .then((response) => {
           console.log(response);
           window.location.reload();
         })
-        .catch((error) => console.error(error.response.data));
-    };
-
-    return {
-      form,
-      handleSubmit,
-    };
-  },
-
-  methods: {
+        .catch((error) => {
+          console.log(error);
+        });
+    },
     deleteComment(id) {
       const token = localStorage.getItem("token");
       //console.log(id);
@@ -107,7 +113,60 @@ export default {
         this.isCommentEditFormVisible[id] = false;
       }
     },
+    reloadPage() {
+      window.location.reload();
+    },
   },
+  // setup() {
+  //   let form = reactive({
+  //     content: "",
+  //   });
+
+  //   let handleSubmit = async (id) => {
+  //     form.commentID = id;
+  //     const token = localStorage.getItem("token");
+  //     await axios
+  //       .put("http://localhost:3000/api/comments/" + id, form, {
+  //         headers: { Authorization: `Bearer ${token}` },
+  //       })
+  //       .then(function (response) {
+  //         console.log(response);
+  //         window.location.reload();
+  //       })
+  //       .catch((error) => console.error(error.response.data));
+  //   };
+
+  //   return {
+  //     form,
+  //     handleSubmit,
+  //   };
+  // },
+
+  // methods: {
+  //   deleteComment(id) {
+  //     const token = localStorage.getItem("token");
+  //     //console.log(id);
+  //     axios
+  //       .delete("http://localhost:3000/api/comments/" + id, {
+  //         headers: { Authorization: `Bearer ${token}` },
+  //       })
+  //       .then((res) => {
+  //         console.log(res);
+  //         window.location.reload();
+  //       })
+  //       .catch((error) => console.log(error));
+  //   },
+  //   showComment() {
+  //     this.isCommentVisible = !this.isCommentVisible;
+  //   },
+  //   showCommentEditForm(id, status) {
+  //     if (status) {
+  //       this.isCommentEditFormVisible[id] = true;
+  //     } else {
+  //       this.isCommentEditFormVisible[id] = false;
+  //     }
+  //   },
+  // },
 };
 </script>
 

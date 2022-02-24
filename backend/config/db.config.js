@@ -1,11 +1,12 @@
 // Connexion à la base de données
+require("dotenv").config();
 module.exports = {
-  HOST: "localhost",
-  USER: "anomrace",
-  PASSWORD: "anomrace",
-  DB: "test",
+  HOST: process.env.HOST,
+  USER: process.env.USER,
+  PASSWORD: process.env.PASSWORD,
+  DB: process.env.DB,
+  PORT: process.env.DB_PORT,
   dialect: "mysql",
-  port: 8889,
   pool: {
     max: 5,
     min: 0,
@@ -13,3 +14,4 @@ module.exports = {
     idle: 10000,
   },
 };
+console.log(process.env.USER);

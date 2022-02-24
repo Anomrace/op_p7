@@ -5,45 +5,62 @@
       <h2>Quoi de neuf, {{ userName }} ?</h2>
     </div>
     <br />
-    <form
-      @submit.prevent="handleSubmit"
-      method="post"
-      enctype="multipart/form-data"
-    >
-      <input type="text" required placeholder="Titre" v-model="title" />
-      <input
+    <Form @submit="handleSubmit" method="post" enctype="multipart/form-data">
+      <Field
+        name="title"
+        type="text"
+        placeholder="Titre"
+        v-model="title"
+        rules="required"
+      />
+      <ErrorMessage name="title" />
+      <Field
+        name="content"
         class="input-contenu"
         type="text"
-        required
         placeholder="Contenu"
         v-model="content"
+        rules="required"
       />
-
-      <input
-        id="vraiBouton"
-        type="file"
-        placeholder="ta photo de profil"
-        ref="file"
-        @change="handleChange"
-        hidden
-      />
-      <br /><br />
-      <label for="vraiBouton">Ajouter une image</label>
-      <br /><br />
-      <span>{{ filename }}</span>
-      <br />
-      <br />
+      <ErrorMessage name="content" />
+      <Field name="userimage">
+        <input
+          id="vraiBouton"
+          type="file"
+          placeholder="ta photo de profil"
+          ref="file"
+          accept="image/*"
+          @change="handleChange"
+          hidden
+        />
+        <br /><br />
+        <label for="vraiBouton">Ajouter une image</label>
+        <br /><br />
+        <span>{{ filename }}</span>
+        <br />
+        <br />
+      </Field>
 
       <button type="submit">Publier</button>
-    </form>
+    </Form>
   </section>
 </template>
 
 <script>
 import axios from "axios";
+import { Form, Field, defineRule, ErrorMessage } from "vee-validate";
+import { required, image } from "@vee-validate/rules";
+
+defineRule("required", required);
+defineRule("image", image);
 
 export default {
   name: "PostForm",
+  components: {
+    Form,
+    Field,
+    ErrorMessage,
+  },
   data() {
     return {
       title: "",

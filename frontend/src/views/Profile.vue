@@ -3,40 +3,44 @@
   <main>
     <article>
       <h1>Profil</h1>
-      <form
-        @submit.prevent="handleSubmit(user.id)"
+      <Form
+        @submit="handleSubmit(user.id)"
         method="post"
         enctype="multipart/form-data"
       >
         <h2>Nom d'utilisateur</h2>
 
-        <input type="text" v-model="username" />
-
+        <Field name="username" type="text" v-model="username" rules="" />
+        <ErrorMessage name="username" />
         <h2>Email</h2>
-        <input type="text" v-model="email" />
-
+        <Field name="email" type="text" v-model="email" />
+        <ErrorMessage name="email" />
         <h2>Biographie</h2>
-        <input type="text" v-model="biography" />
-
+        <Field name="biography" type="text" v-model="biography" />
+        <ErrorMessage name="biography" />
         <h2>Mot de passe</h2>
-        <input type="text" v-model="password" />
+        <Field name="password" type="text" v-model="password" />
+        <ErrorMessage name="password" />
         <h2>Image de profil</h2>
         <img :src="user.image" alt="img" />
 
-        <input
-          type="file"
-          placeholder="ta photo de profil"
-          ref="file"
-          @change="handleChange"
-        />
+        <Field name="userimage"
+          ><input
+            placeholder="ta photo de profil"
+            ref="file"
+            accept="image/*"
+            @change="handleChange"
+            type="file"
+        /></Field>
+        <ErrorMessage name="userimage" />
 
         <button type="submit">Modifier</button>
-      </form>
+      </Form>
       <br />
 
-      <form @submit.prevent="handleDelete(user.id)" method="post">
+      <Form @submit="handleDelete(user.id)" method="post">
         <button type="submit">Supprimer votre compte</button>
-      </form>
+      </Form>
       <p>Attention, cette action supprimera toutes vos données</p>
     </article>
   </main>
@@ -45,11 +49,21 @@
 <script>
 import axios from "axios";
 import Nav from "../components/Nav.vue";
-// import { useRouter } from "vue-router";
+import { Form, Field, defineRule, ErrorMessage } from "vee-validate";
+import { required, email, min, mimes } from "@vee-validate/rules";
+
+defineRule("required", required);
+defineRule("email", email);
+defineRule("min", min);
+defineRule("mimes", mimes);
+
 export default {
   name: "Profile",
   components: {
     Nav,
+    Form,
+    Field,
+    ErrorMessage,
   },
   data() {
     return {
@@ -105,7 +119,7 @@ export default {
         .put("http://localhost:3000/api/auth/updateUser/" + id, myformData, {
           headers: {
             Authorization: `Bearer ${token}`,
-            "Content-Type": "multipart/form-data",
+            "Content-Type": "multipart/Form-data",
           },
         })
         .then(function (response) {
@@ -128,7 +142,6 @@ export default {
         .then((res) => {
           console.log(res);
           this.$router.push("/");
-
           localStorage.clear();
         })
         .catch((error) => console.log(error));

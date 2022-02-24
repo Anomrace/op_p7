@@ -1,5 +1,6 @@
 // gère les fichiers envoyés au back
 const multer = require("multer");
+const imageValidator = require("./image-validate");
 
 const MIME_TYPES = {
   "image/jpg": "jpg",
@@ -20,4 +21,5 @@ const storage = multer.diskStorage({
 
 module.exports = multer({
   storage: storage,
+  fileFilter: imageValidator.imageFilter,
 }).single("image");

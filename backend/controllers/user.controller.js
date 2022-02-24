@@ -20,7 +20,6 @@ exports.signup = (req, res, next) => {
   })
     .then(() => {
       res.status(200).json({ message: "utilisateur crée" });
-      //fs.writeFileSync(__dirname + 'images' + image.name, image.data)
     })
     .catch((err) => {
       res
@@ -30,7 +29,7 @@ exports.signup = (req, res, next) => {
 };
 
 exports.signin = (req, res) => {
-  // console.log(req.body)
+  // console.log(req.body);
   User.findOne({
     where: {
       username: req.body.username,
@@ -130,75 +129,81 @@ exports.updateUser = (req, res, next) => {
   const userId = decodedToken.userId;
   const userStatus = decodedToken.userStatus;
 
-  User.findByPk(id).then((data) => {
-    console.log(data);
-    if (data.id === userId || userStatus === 1) {
-      let newUsername = data.username;
-      let newEmail = data.email;
-      let newPassword = data.password;
-      let newImage = data.image;
-      let newBiography = data.biography;
+  User.findByPk(id)
+    .then((data) => {
+      console.log(data);
+      if (data.id === userId || userStatus === 1) {
+        let newUsername = data.username;
+        let newEmail = data.email;
+        let newPassword = data.password;
+        let newImage = data.image;
+        let newBiography = data.biography;
 
-      if (req.body.username) {
-        newUsername = req.body.username;
-      }
-
-      if (req.body.email) {
-        newEmail = req.body.email;
-      }
-      if (req.body.password) {
-        newPassword = bcrypt.hashSync(req.body.password, 8);
-      }
-
-      if (req.file) {
-        let filename = data.image.split("/images/")[1];
-        fs.unlink(
-          `images/${filename}`,
-          (err) => {
-            if (err) {
-              console.log(err);
-            } else {
-              console.log("le fichier a bien été supprimé");
-            }
-          },
-          (newImage = `${req.protocol}://${req.get("host")}/images/${
-            req.file.filename
-          }`)
-        );
-      }
-
-      if (req.body.biography) {
-        newBiography = req.body.biography;
-      }
-
-      User.update(
-        {
-          username: newUsername,
-          email: newEmail,
-          biography: newBiography,
-          password: newPassword,
-          image: newImage,
-        },
-        {
-          where: { id: id },
+        if (req.body.username) {
+          newUsername = req.body.username;
         }
-      )
-        .then((data) => {
-          res.status(201).send({
-            message: "Le profil a été modifié avec succès",
+
+        if (req.body.email) {
+          newEmail = req.body.email;
+        }
+        if (req.body.password) {
+          newPassword = bcrypt.hashSync(req.body.password, 8);
+        }
+
+        if (req.file) {
+          let filename = data.image.split("/images/")[1];
+          fs.unlink(
+            `images/${filename}`,
+            (err) => {
+              if (err) {
+                console.log(err);
+              } else {
+                console.log("le fichier a bien été supprimé");
+              }
+            },
+            (newImage = `${req.protocol}://${req.get("host")}/images/${
+              req.file.filename
+            }`)
+          );
+        }
+
+        if (req.body.biography) {
+          newBiography = req.body.biography;
+        }
+
+        User.update(
+          {
+            username: newUsername,
+            email: newEmail,
+            biography: newBiography,
+            password: newPassword,
+            image: newImage,
+          },
+          {
+            where: { id: id },
+          }
+        )
+          .then((data) => {
+            res.status(201).send({
+              message: "Le profil a été modifié avec succès",
+            });
+          })
+          .catch((err) => {
+            res.status(500).send({
+              message: "Erreur dans la mise à jour du profil id=" + id,
+            });
           });
-        })
-        .catch((err) => {
-          res
-            .status(500)
-            .send({ message: "Erreur dans la mise à jour du profil id=" + id });
+      } else {
+        return res.status(501).json({
+          message: "vous n'êtes pas authorisé à modifier ce profil",
         });
-    } else {
-      return res.status(501).json({
-        message: "vous n'êtes pas authorisé à modifier ce profil",
+      }
+    })
+    .catch((err) => {
+      res.status(500).send({
+        message: "Erreur pour le user id=" + id,
       });
-    }
-  });
+    });
 };
 
 exports.deleteOneUser = (req, res, next) => {
